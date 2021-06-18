@@ -7,27 +7,74 @@ import sys, argparse
 import numpy as np
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation
+from numpy.core.shape_base import block
+import config
 
-ON = 255
+ON = 1
 OFF = 0
 vals = [ON, OFF]
+GEN = 0
 
 def randomGrid(N):
     """returns a grid of NxN random values"""
     return np.random.choice(vals, N*N, p=[0.2, 0.8]).reshape(N, N)
 
+def countNeighbors(grid, x, y):
+    """count number of live neighbors"""
+    neighbors = 0
+    i = -1
+    j = -1
+    while i < 2:
+        while j < 2:
+            neighbors += grid[i][j]
+            j += 1 
+        i += 1
+    # ommit self value
+    neighbors -= grid[x][y]
+    return neighbors
+
+
+def checkCells(newGrid):
+    """check the rules for Conway's GoL"""
+    for i in range(newGrid.shape[0]):
+        for j in range(newGrid.shape[1]):
+            # count live neighbors
+            print(i)
+            print(f"live neighbors at [{i} , {j}]: {countNeighbors(newGrid, i, j)}\n")
+            '''
+            count += newGrid[i-1][j-1]
+            count += newGrid[i][j-1]
+            count += newGrid[i+1][j-1]
+            count += newGrid[i-1][j]
+            count += newGrid[i+1][j]
+            count += newGrid[i-1][j+1]
+            count += newGrid[i][j+1]
+            count += newGrid[i+1][j+1]
+            '''
+
+
+
 def addGlider(i, j, grid):
     """adds a glider with top left cell at (i, j)"""
-    glider = np.array([[0,    0, 255], 
-                       [255,  0, 255], 
-                       [0,  255, 255]])
+    glider = np.array([[0,    0, 1], 
+                       [1,  0, 1], 
+                       [0,  1, 1]])
     grid[i:i+3, j:j+3] = glider
+
+def addLightWeight(i, j, grid):
+    """adds a light-weight spaceship with top left cell at (i, j)"""
+    lightWeight = np.array([[0, 1, 1, 0, 1],
+                            [1, 1, 1, 1,0],
+                            [0, 1, 1, 1, 0],
+                            [1, 0, 0, 0, 0]])
+    grid[i:i+4, j:j+5] = lightWeight
 
 def update(frameNum, img, grid, N):
     # copy grid since we require 8 neighbors for calculation
     # and we go line by line 
     newGrid = grid.copy()
     # TODO: Implement the rules of Conway's Game of Life
+    checkCells(newGrid)
 
     # update data
     img.set_data(newGrid)
@@ -43,7 +90,7 @@ def main():
     # TODO: add arguments
     
     # set grid size
-    N = 100
+    N = config.UNIVERSE_SIZE
         
     # set animation update interval
     updateInterval = 50
@@ -52,9 +99,10 @@ def main():
     grid = np.array([])
     # populate grid with random on/off - more off than on
     grid = randomGrid(N)
-    # Uncomment lines to see the "glider" demo
+    # Uncomment lines to see the "glider" & "light weight" demo
     #grid = np.zeros(N*N).reshape(N, N)
     #addGlider(1, 1, grid)
+    #addLightWeight(5, 1, grid)
 
     # set up animation
     fig, ax = plt.subplots()
@@ -64,7 +112,7 @@ def main():
                                   interval=updateInterval,
                                   save_count=50)
 
-    plt.show()
+    plt.show(block=True)
 
 # call main
 if __name__ == '__main__':
