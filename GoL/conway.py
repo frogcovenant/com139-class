@@ -14,19 +14,22 @@ ON = 1
 OFF = 0
 vals = [ON, OFF]
 GEN = 0
+N = config.UNIVERSE_SIZE
 
 def randomGrid(N):
     """returns a grid of NxN random values"""
     return np.random.choice(vals, N*N, p=[0.2, 0.8]).reshape(N, N)
 
-def countNeighbors(grid, x, y):
+def countNeighbors(grid, x, y, limx, limy):
     """count number of live neighbors"""
     neighbors = 0
     i = -1
-    j = -1
     while i < 2:
+        j = -1
         while j < 2:
-            neighbors += grid[i][j]
+            if x+i >= 0 and x+i < limx:
+                if y+j >= 0 and y+j < limy:
+                    neighbors += grid[x+i][y+j]
             j += 1 
         i += 1
     # ommit self value
@@ -39,18 +42,9 @@ def checkCells(newGrid):
     for i in range(newGrid.shape[0]):
         for j in range(newGrid.shape[1]):
             # count live neighbors
-            print(i)
-            print(f"live neighbors at [{i} , {j}]: {countNeighbors(newGrid, i, j)}\n")
-            '''
-            count += newGrid[i-1][j-1]
-            count += newGrid[i][j-1]
-            count += newGrid[i+1][j-1]
-            count += newGrid[i-1][j]
-            count += newGrid[i+1][j]
-            count += newGrid[i-1][j+1]
-            count += newGrid[i][j+1]
-            count += newGrid[i+1][j+1]
-            '''
+            print(j)
+
+            print(f"live neighbors at [{i} , {j}]: {countNeighbors(newGrid, i, j, N, N)}\n")
 
 
 
@@ -88,9 +82,6 @@ def main():
     # parse arguments
     parser = argparse.ArgumentParser(description="Runs Conway's Game of Life system.py.")
     # TODO: add arguments
-    
-    # set grid size
-    N = config.UNIVERSE_SIZE
         
     # set animation update interval
     updateInterval = 50
