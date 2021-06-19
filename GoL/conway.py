@@ -5,6 +5,7 @@ A simple Python/matplotlib implementation of Conway's Game of Life.
 
 import sys, argparse
 import numpy as np
+import random
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation
 from numpy.core.shape_base import block
@@ -37,15 +38,19 @@ def countNeighbors(grid, x, y, limx, limy):
     return neighbors
 
 
-def checkCells(newGrid):
+def checkCells(newGrid, grid):
     """check the rules for Conway's GoL"""
-    for i in range(newGrid.shape[0]):
-        for j in range(newGrid.shape[1]):
+    for i in range(grid.shape[0]):
+        for j in range(grid.shape[1]):
+            state = grid[i][j]
             # count live neighbors
-            print(j)
-
-            print(f"live neighbors at [{i} , {j}]: {countNeighbors(newGrid, i, j, N, N)}\n")
-
+            neighbors = countNeighbors(grid, i, j, N, N)
+            # validate rules
+            if state == 0 and neighbors == 3:
+                state = 1
+            elif state == 1 and (neighbors < 2 or neighbors > 3):
+                state = 0
+            newGrid[i][j] = state
 
 
 def addGlider(i, j, grid):
@@ -68,7 +73,7 @@ def update(frameNum, img, grid, N):
     # and we go line by line 
     newGrid = grid.copy()
     # TODO: Implement the rules of Conway's Game of Life
-    checkCells(newGrid)
+    checkCells(newGrid, grid)
 
     # update data
     img.set_data(newGrid)
@@ -91,9 +96,8 @@ def main():
     # populate grid with random on/off - more off than on
     grid = randomGrid(N)
     # Uncomment lines to see the "glider" & "light weight" demo
-    #grid = np.zeros(N*N).reshape(N, N)
-    #addGlider(1, 1, grid)
-    #addLightWeight(5, 1, grid)
+    # grid = np.zeros(N*N).reshape(N, N)
+    # addGlider(50, 50, grid)
 
     # set up animation
     fig, ax = plt.subplots()
