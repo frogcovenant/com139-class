@@ -15,7 +15,7 @@ ON = 1
 OFF = 0
 vals = [ON, OFF]
 GEN = 0
-N = config.UNIVERSE_SIZE
+N = int(sys.argv[1]) 
 
 def randomGrid(N):
     """returns a grid of NxN random values"""
@@ -52,6 +52,11 @@ def checkCells(newGrid, grid):
                 state = 0
             newGrid[i][j] = state
 
+def addDots(grid, dots):
+    """adds the dots to the grid"""
+    for dot in dots:
+        grid[dot[0]][dot[1]] = 1
+
 
 def addGlider(i, j, grid):
     """adds a glider with top left cell at (i, j)"""
@@ -86,8 +91,7 @@ def main():
     # sys.argv[0] is the script name itself and can be ignored
     # parse arguments
     parser = argparse.ArgumentParser(description="Runs Conway's Game of Life system.py.")
-    # TODO: add arguments
-        
+    # TODO: add arguments  
     # set animation update interval
     updateInterval = 50
 
@@ -96,14 +100,15 @@ def main():
     # populate grid with random on/off - more off than on
     grid = randomGrid(N)
     # Uncomment lines to see the "glider" & "light weight" demo
-    # grid = np.zeros(N*N).reshape(N, N)
+    grid = np.zeros(N*N).reshape(N, N)
+    addDots(grid, config.ARRANGEMENT)
     # addGlider(50, 50, grid)
 
     # set up animation
     fig, ax = plt.subplots()
     img = ax.imshow(grid, interpolation='nearest')
-    ani = animation.FuncAnimation(fig, update, fargs=(img, grid, N, ),
-                                  frames = 10,
+    ani = animation.FuncAnimation(fig, update, fargs=(img, grid, N, ), repeat = False,
+                                  frames = config.GENERATIONS,
                                   interval=updateInterval,
                                   save_count=50)
 

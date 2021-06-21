@@ -1,2 +1,2 @@
-UNIVERSE_SIZE = 100 # set the size of the Universe
-ITERATIONS = 200
+ARRANGEMENT = [[39, 40],[39, 41],[40, 39],[40, 40],[41, 40]]
+GENERATIONS = 1500
