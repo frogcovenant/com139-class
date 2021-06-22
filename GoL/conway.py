@@ -101,8 +101,14 @@ def main():
     grid = randomGrid(N)
     # Uncomment lines to see the "glider" & "light weight" demo
     grid = np.zeros(N*N).reshape(N, N)
-    addDots(grid, config.ARRANGEMENT)
-    # addGlider(50, 50, grid)
+    if config.ARRANGEMENT != None:
+        addDots(grid, config.ARRANGEMENT)
+    if config.GLIDERS != None:
+        for glider in config.GLIDERS:
+            addGlider(glider[0], glider[1], grid)
+    if config.LIGHT_WEIGHTS != None:
+        for lightWeight in config.LIGHT_WEIGHTS:
+            addLightWeight(lightWeight[0], lightWeight[1], grid)
 
     # set up animation
     fig, ax = plt.subplots()
