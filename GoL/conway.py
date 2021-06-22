@@ -113,7 +113,7 @@ def main():
     # set up animation
     fig, ax = plt.subplots()
     img = ax.imshow(grid, interpolation='nearest')
-    ani = animation.FuncAnimation(fig, update, fargs=(img, grid, N, ), repeat = False,
+    ani = animation.FuncAnimation(fig, update, fargs=(img, grid, N, ), repeat = config.REPEAT,
                                   frames = config.GENERATIONS,
                                   interval=updateInterval,
                                   save_count=50)

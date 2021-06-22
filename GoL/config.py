@@ -1,5 +1,6 @@
 ARRANGEMENT = None
 GENERATIONS = None
+REPEAT = True
 GLIDERS = [[2,7], [8, 3], [14, 15]]
 LIGHT_WEIGHTS = [[14,25], [12, 23]]
 
