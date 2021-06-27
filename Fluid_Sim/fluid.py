@@ -6,6 +6,7 @@ https://github.com/Guilouf/python_realtime_fluidsim
 """
 import numpy as np
 import math
+import config
 
 
 class Fluid:
@@ -167,12 +168,14 @@ if __name__ == "__main__":
         from matplotlib import animation
 
         inst = Fluid()
+        
 
         def update_im(i):
             # We add new density creators in here
-            inst.density[14:17, 14:17] += 100  # add density into a 3*3 square
+            for i in range(len(config.positions)):
+                inst.density[config.positions[i][0]:config.positions[i][0]+config.sizes[i], config.positions[i][1]:config.positions[i][1]+config.sizes[i]] += config.densities[i]  # add density into a 3*3 square
             # We add velocity vector values in here
-            inst.velo[20, 20] = [-2, -2]
+                inst.velo[config.positions[i][0] + (int(config.sizes[i]/2.0)),config.positions[i][1] + (int(config.sizes[i]/2.0))] = [config.velocities[i][0], config.velocities[i][1]]
             inst.step()
             im.set_array(inst.density)
             q.set_UVC(inst.velo[:, :, 1], inst.velo[:, :, 0])
@@ -182,12 +185,12 @@ if __name__ == "__main__":
         fig = plt.figure()
 
         # plot density
-        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear')
+        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=config.colors[2])
 
         # plot vector field
         q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy')
-        anim = animation.FuncAnimation(fig, update_im, interval=0)
-        anim.save("movie.mp4", fps=30, extra_args=['-vcodec', 'libx264'])
+        anim = animation.FuncAnimation(fig, update_im, interval=30)
+        #anim.save("movie.mp4", fps=30, extra_args=['-vcodec', 'libx264'])
         plt.show()
 
     except ImportError:
