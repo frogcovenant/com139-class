@@ -6,6 +6,8 @@ https://github.com/Guilouf/python_realtime_fluidsim
 """
 import numpy as np
 import math
+import json
+import sys
 import config
 
 
@@ -161,6 +163,22 @@ class Fluid:
             self.roty = self.rotx
         return self.rotx, self.roty
 
+def velocity_behavior(frame, behavior, vel1, vel2):
+    if behavior == 'spiral':
+        rslt1 = np.cos(vel1*frame) 
+        rslt2 = np.sin(vel2*frame)
+        return [rslt1, rslt2]
+    elif behavior == 'zigzag_vertical':
+        rslt2 = np.sin(vel2*frame)
+        return [vel1, rslt2]
+    elif behavior == 'zigzag_horizontal':
+        rslt1 = np.sin(vel1*frame)
+        return [rslt1, vel2]
+    elif behavior == 'normal':
+        return [vel1, vel2]
+
+def read_config(file):
+    return json.load(file)
 
 if __name__ == "__main__":
     try:
@@ -168,14 +186,19 @@ if __name__ == "__main__":
         from matplotlib import animation
 
         inst = Fluid()
-        
+        file = open(sys.argv[1], 'r')
+        data = read_config(file)
+        print(data.keys())
 
-        def update_im(i):
+
+        def update_im(frame):
             # We add new density creators in here
-            for i in range(len(config.positions)):
-                inst.density[config.positions[i][0]:config.positions[i][0]+config.sizes[i], config.positions[i][1]:config.positions[i][1]+config.sizes[i]] += config.densities[i]  # add density into a 3*3 square
+            densities = data['densities']
+            for d in range(len(config.densities)):
+                inst.density[config.densities[d][0]:config.densities[d][1], config.densities[d][2]:config.densities[d][3]] += config.densities[d][4]  # add density into a 3*3 square
             # We add velocity vector values in here
-                inst.velo[config.positions[i][0] + (int(config.sizes[i]/2.0)),config.positions[i][1] + (int(config.sizes[i]/2.0))] = [config.velocities[i][0], config.velocities[i][1]]
+            for v in range (len(config.velocities)):
+                inst.velo[config.velocities[v][0]:config.velocities[v][1], config.velocities[v][2]:config.velocities[v][3]] = velocity_behavior(frame, config.behaviors[v], config.velocities[v][4], config.velocities[v][5])
             inst.step()
             im.set_array(inst.density)
             q.set_UVC(inst.velo[:, :, 1], inst.velo[:, :, 0])
@@ -185,10 +208,10 @@ if __name__ == "__main__":
         fig = plt.figure()
 
         # plot density
-        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=config.colors[2])
+        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=config.colors[13])
 
         # plot vector field
-        q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy')
+        q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color="BlUE")
         anim = animation.FuncAnimation(fig, update_im, interval=30)
         #anim.save("movie.mp4", fps=30, extra_args=['-vcodec', 'libx264'])
         plt.show()
