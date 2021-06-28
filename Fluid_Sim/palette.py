@@ -1,8 +1,4 @@
-densities = [[10, 50, 10, 50, 100]] #x1, x2, y1, y2, density
-velocities = [[44, 47, 44, 47, -2, -2], [14, 17, 14, 17, 2, 2]] #x1, x2, y1, y2, vel1, vel2
-behaviors = ['zigzag_horizontal', 'spiral']
-
-colors = [
+cmaps = [
     'viridis',
     'plasma',
     'inferno',
@@ -73,4 +69,11 @@ colors = [
     'turbo',
     'nipy_spectral',
     'gist_ncar'
+]
+
+colors = [
+        "red",
+        "blue",
+        "green",
+        "yellow"
 ]

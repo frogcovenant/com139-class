@@ -8,7 +8,7 @@ import numpy as np
 import math
 import json
 import sys
-import config
+import palette
 
 
 class Fluid:
@@ -194,11 +194,12 @@ if __name__ == "__main__":
         def update_im(frame):
             # We add new density creators in here
             densities = data['densities']
-            for d in range(len(config.densities)):
-                inst.density[config.densities[d][0]:config.densities[d][1], config.densities[d][2]:config.densities[d][3]] += config.densities[d][4]  # add density into a 3*3 square
+            velocities = data['velocities']
+            for density in densities:
+                inst.density[density['position']['x1']:density['position']['x2'], density['position']['y1']:density['position']['y2']] += density['density']  # add density into a 3*3 square
             # We add velocity vector values in here
-            for v in range (len(config.velocities)):
-                inst.velo[config.velocities[v][0]:config.velocities[v][1], config.velocities[v][2]:config.velocities[v][3]] = velocity_behavior(frame, config.behaviors[v], config.velocities[v][4], config.velocities[v][5])
+            for velocity in velocities:
+                inst.velo[velocity['position']['x1']:velocity['position']['x2'], velocity['position']['y1']:velocity['position']['y2']] = velocity_behavior(frame, velocity['behavior'], velocity['direction'][0], velocity['direction'][1])
             inst.step()
             im.set_array(inst.density)
             q.set_UVC(inst.velo[:, :, 1], inst.velo[:, :, 0])
@@ -208,10 +209,10 @@ if __name__ == "__main__":
         fig = plt.figure()
 
         # plot density
-        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=config.colors[13])
+        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=palette.cmaps[13])
 
         # plot vector field
-        q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color="BlUE")
+        q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color=palette.colors[1])
         anim = animation.FuncAnimation(fig, update_im, interval=30)
         #anim.save("movie.mp4", fps=30, extra_args=['-vcodec', 'libx264'])
         plt.show()

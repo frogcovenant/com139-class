@@ -1,5 +1,4 @@
 {
-    "behavior": "zigzag_vertical",
     "densities":[
         {
             "position":{
@@ -19,7 +18,8 @@
                 "y1":44,
                 "y2":47
             },
-            "direction": [-2,-2]
+            "direction": [-2,-2],
+            "behavior": "spiral"
         },
         {
             "position":{
@@ -28,7 +28,8 @@
                 "y1":14,
                 "y2":17
             },
-            "direction": [2,2]
+            "direction": [2,2],
+            "behavior": "spiral"
         }
     ]
 }
