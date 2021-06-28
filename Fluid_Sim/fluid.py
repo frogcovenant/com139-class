@@ -213,9 +213,11 @@ if __name__ == "__main__":
 
         # plot vector field
         q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color=palette.colors[1])
-        anim = animation.FuncAnimation(fig, update_im, interval=30)
-        #anim.save("movie.mp4", fps=30, extra_args=['-vcodec', 'libx264'])
-        plt.show()
+        Writer = animation.writers['pillow']
+        writer = Writer(fps=30, metadata=dict(artist='Me'), bitrate=1800, )
+        anim = animation.FuncAnimation(fig, update_im, interval=30, frames=200)
+        anim.save("Fluid_Sim/movie.gif", writer=writer)
+        #plt.show()
 
     except ImportError:
         import imageio
