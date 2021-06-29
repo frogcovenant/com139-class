@@ -193,6 +193,7 @@ if __name__ == "__main__":
     try:
         import matplotlib.pyplot as plt
         from matplotlib import animation
+        import requests
 
         inst = Fluid()
         file = open(sys.argv[1], 'r')
@@ -202,9 +203,23 @@ if __name__ == "__main__":
 
         def update_im(frame):
             # We add new density creators in here
-            densities = data['densities']
-            objects = data['objects']
-            velocities = data['velocities']
+            densities = dict()
+            objects = dict()
+            velocities = dict()
+            try:
+                densities = data['densities']
+            except:
+                print("No densities")
+            
+            try:
+                objects = data['objects']
+            except:
+                print("No objects in the simulation")
+
+            try:
+                velocities = data['velocities']
+            except:
+                print("No velocities")
             
             for density in densities:
                 inst.density[density['position']['x1']:density['position']['x2'], density['position']['y1']:density['position']['y2']] += density['density']  # add density into a 3*3 square
@@ -217,8 +232,7 @@ if __name__ == "__main__":
                 box[object['position']['y']:object['position']['y']+object['shape']['cols'], object['position']['x']:object['position']['x']+object['shape']['rows']] += 100
                 inst.set_boundaries(box)
             '''
-            
-       
+
             # We add velocity vector values in here
             for velocity in velocities:
                 inst.velo[velocity['position']['x1']:velocity['position']['x2'], velocity['position']['y1']:velocity['position']['y2']] = velocity_behavior(frame, velocity['behavior'], velocity['direction'][0], velocity['direction'][1])
@@ -231,11 +245,13 @@ if __name__ == "__main__":
 
         fig = plt.figure()
 
-        # plot density
-        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=palette.cmaps[9])
-
-        # plot vector field
-        q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color=palette.colors[1])
+        print(len(palette.cmaps))
+        colors = data['colors']
+        for color in colors:
+             # plot density
+            im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=palette.cmaps[color['cmap']])
+            # plot vector field
+            q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color=palette.colors[color['color']])
         Writer = animation.writers['pillow']
         writer = Writer(fps=30, metadata=dict(artist='Me'), bitrate=1800, )
         anim = animation.FuncAnimation(fig, update_im, interval=30, frames=200)

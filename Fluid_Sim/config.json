@@ -1,4 +1,10 @@
 {
+    "colors":[
+        {
+            "cmap":17,
+            "color":1
+        }
+    ],
     "densities":[
         {
             "position":{
@@ -25,32 +31,12 @@
     "velocities":[
         {
             "position":{
-                "x1":5,
-                "x2":9,
-                "y1":5,
-                "y2":9
+                "x1":44,
+                "x2":47,
+                "y1":44,
+                "y2":47
             },
-            "direction": [1, 1],
-            "behavior": "normal"
-        },
-        {
-            "position":{
-                "x1":5,
-                "x2":9,
-                "y1":51,
-                "y2":55
-            },
-            "direction": [1, -1],
-            "behavior": "normal"
-        },
-        {
-            "position":{
-                "x1":45,
-                "x2":50,
-                "y1":25,
-                "y2":30
-            },
-            "direction": [1, 1],
+            "direction": [-2,-2],
             "behavior": "spiral"
         }
     ]
