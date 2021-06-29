@@ -7,11 +7,17 @@ At first I wasn't sure how to give the required arguments for the fluid animatio
 
 ## Object presence
 This challenge was impossible for me to solve. Here's how I went around the problem:
-1. I added new values in the JSON file for the new dictionary that would contain everything needed for creating an object. First I wanted to try a simple box object.
-2. In order to check wheter my object was correctly placed on the grid, I added some color to it.
+I added new values in the JSON file for the new dictionary that would contain everything needed for creating an object. First I wanted to try a simple box object.
+In order to check wheter my object was correctly placed on the grid, I added some color to it.
 
 ![box](https://github.com/frogcovenant/com139-class/blob/ss/Fluid_Sim/box_img.png "Box in grid")
 
-3. Once I confirmed that it was placed properly, I tried calling the function responsible for setting boundaries and adding this box as one, however the result was unsatisfactory
+Once I confirmed that it was placed properly, I tried calling the function responsible for setting boundaries and adding this box as one, however the result was unsatisfactory
 
 ![failure](https://github.com/frogcovenant/com139-class/blob/ss/Fluid_Sim/no_object.gif "No presence of the object")
+
+I moved on from this and tried doing some configurations. While making one of them I came across a strange result
+
+![weird](https://github.com/frogcovenant/com139-class/blob/ss/Fluid_Sim/curious.gif "An interesting result")
+
+Some "objects" (edges that make square-like figures) appear because of opossing forces, so I thought that I would go and check in the code how this behavior may have emerged to get a clue as to how I could add objects.
