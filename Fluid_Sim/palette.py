@@ -75,5 +75,6 @@ colors = [
         "red",
         "blue",
         "green",
-        "yellow"
+        "yellow",
+        "black"
 ]

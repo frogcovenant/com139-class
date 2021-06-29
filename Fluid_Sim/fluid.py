@@ -74,11 +74,14 @@ class Fluid:
             table[0, :, 0] = - table[0, :, 0]
             table[self.size - 1, :, 0] = - table[self.size - 1, :, 0]
 
+        # boundaries for the whole grid
         table[0, 0] = 0.5 * (table[1, 0] + table[0, 1])
         table[0, self.size - 1] = 0.5 * (table[1, self.size - 1] + table[0, self.size - 2])
         table[self.size - 1, 0] = 0.5 * (table[self.size - 2, 0] + table[self.size - 1, 1])
         table[self.size - 1, self.size - 1] = 0.5 * table[self.size - 2, self.size - 1] + \
                                               table[self.size - 1, self.size - 2]
+        
+
 
     def diffuse(self, x, x0, diff):
         if diff != 0:
@@ -146,6 +149,7 @@ class Fluid:
                     # tmp = str("inline: i0: %d, j0: %d, i1: %d, j1: %d" % (i0, j0, i1, j1))
                     # print("tmp: %s\ntmp1: %s" %(tmp, tmp1))
                     raise IndexError
+                
         self.set_boundaries(d)
 
     def turn(self):
@@ -163,6 +167,8 @@ class Fluid:
             self.roty = self.rotx
         return self.rotx, self.roty
 
+            
+
 def velocity_behavior(frame, behavior, vel1, vel2):
     if behavior == 'spiral':
         rslt1 = np.cos(vel1*frame) 
@@ -176,6 +182,9 @@ def velocity_behavior(frame, behavior, vel1, vel2):
         return [rslt1, vel2]
     elif behavior == 'normal':
         return [vel1, vel2]
+
+def draw_box(cols, rows):
+    return np.zeros(shape=(cols, rows))
 
 def read_config(file):
     return json.load(file)
@@ -194,12 +203,26 @@ if __name__ == "__main__":
         def update_im(frame):
             # We add new density creators in here
             densities = data['densities']
+            objects = data['objects']
             velocities = data['velocities']
+            
             for density in densities:
                 inst.density[density['position']['x1']:density['position']['x2'], density['position']['y1']:density['position']['y2']] += density['density']  # add density into a 3*3 square
+            im.set_array(inst.density)
+            
+            '''
+            # We add objects in here
+            for object in objects:
+                box = draw_box(inst.size, inst.size)
+                box[object['position']['y']:object['position']['y']+object['shape']['cols'], object['position']['x']:object['position']['x']+object['shape']['rows']] += 100
+                inst.set_boundaries(box)
+            '''
+            
+       
             # We add velocity vector values in here
             for velocity in velocities:
                 inst.velo[velocity['position']['x1']:velocity['position']['x2'], velocity['position']['y1']:velocity['position']['y2']] = velocity_behavior(frame, velocity['behavior'], velocity['direction'][0], velocity['direction'][1])
+
             inst.step()
             im.set_array(inst.density)
             q.set_UVC(inst.velo[:, :, 1], inst.velo[:, :, 0])
@@ -209,7 +232,7 @@ if __name__ == "__main__":
         fig = plt.figure()
 
         # plot density
-        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=palette.cmaps[13])
+        im = plt.imshow(inst.density, vmax=100, interpolation='bilinear', cmap=palette.cmaps[9])
 
         # plot vector field
         q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color=palette.colors[1])
@@ -217,7 +240,7 @@ if __name__ == "__main__":
         writer = Writer(fps=30, metadata=dict(artist='Me'), bitrate=1800, )
         anim = animation.FuncAnimation(fig, update_im, interval=30, frames=200)
         anim.save("Fluid_Sim/movie.gif", writer=writer)
-        #plt.show()
+        plt.show()
 
     except ImportError:
         import imageio

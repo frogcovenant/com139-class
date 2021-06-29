@@ -10,25 +10,47 @@
             "density": 100
         }
     ],
+    "objects":[
+        {
+            "position":{
+                "x":15,
+                "y":17
+            },
+            "shape":{
+                "cols":7,
+                "rows":5
+            }
+        }
+    ],
     "velocities":[
         {
             "position":{
-                "x1":44,
-                "x2":47,
-                "y1":44,
-                "y2":47
+                "x1":5,
+                "x2":9,
+                "y1":5,
+                "y2":9
             },
-            "direction": [-2,-2],
-            "behavior": "spiral"
+            "direction": [1, 1],
+            "behavior": "normal"
         },
         {
             "position":{
-                "x1":14,
-                "x2":17,
-                "y1":14,
-                "y2":17
+                "x1":5,
+                "x2":9,
+                "y1":51,
+                "y2":55
             },
-            "direction": [2,2],
+            "direction": [1, -1],
+            "behavior": "normal"
+        },
+        {
+            "position":{
+                "x1":45,
+                "x2":50,
+                "y1":25,
+                "y2":30
+            },
+            "direction": [1, 1],
             "behavior": "spiral"
         }
     ]
