@@ -13,4 +13,5 @@ This challenge was impossible for me to solve. Here's how I went around the prob
 ![box](https://github.com/frogcovenant/com139-class/blob/ss/Fluid_Sim/box_img.png "Box in grid")
 
 3. Once I confirmed that it was placed properly, I tried calling the function responsible for setting boundaries and adding this box as one, however the result was unsatisfactory
+
 ![failure](https://github.com/frogcovenant/com139-class/blob/ss/Fluid_Sim/no_object.gif "No presence of the object")
